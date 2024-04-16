@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.messages import constants
 from django.contrib import messages
+from django.contrib import auth
 
 def register(request):
     if request.method == "GET":
@@ -43,3 +44,19 @@ def register(request):
         
         return redirect('/users/register/')
     
+    
+def login_view(request):
+    if request.method == "GET":
+        return render(request, 'login.html')
+    elif request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        user = auth.authenticate(request, username=username, password=password)
+        
+        if user:
+            auth.login(request, user)
+            return redirect('/pacients/home')
+        
+        messages.add_message(request, constants.ERROR, 'Usuário ou senha inválidos')
+        return redirect('/users/login/')
