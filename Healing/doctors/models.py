@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from datetime import datetime
 
 def is_doctor(user):
     return DoctorsData.objects.filter(user=user).exists()
@@ -26,8 +26,13 @@ class DoctorsData(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     specialty = models.ForeignKey(Specialties, on_delete=models.DO_NOTHING)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.user.username
+    
+    @property
+    def next_date(self):
+        available = ScheduleOpenings.objects.filter(user=self.user).filter(date__gt=datetime.now()).filter(appointment_date=False).order_by('date').first()
+        return available
 
 class ScheduleOpenings(models.Model):
     date = models.DateTimeField()
