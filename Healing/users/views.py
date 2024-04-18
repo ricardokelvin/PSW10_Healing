@@ -42,7 +42,7 @@ def register(request):
             password=password
         )
         
-        return redirect('/users/register/')
+        return redirect('/users/login/')
     
     
 def login_view(request):

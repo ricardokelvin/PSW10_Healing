@@ -28,3 +28,11 @@ class DoctorsData(models.Model):
 
     def __str__(self) -> str:
         return self.user.username
+
+class ScheduleOpenings(models.Model):
+    date = models.DateTimeField()
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    appointment_date = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return str(self.date)
